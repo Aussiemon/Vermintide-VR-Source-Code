@@ -1,0 +1,35 @@
+﻿-- chunkname: @core/wwise/lua/wwise_bank_reference.lua
+
+stingray.WwiseBankReference = stingray.WwiseBankReference or {}
+
+local WwiseBankReference = stingray.WwiseBankReference
+
+local function lazy_init(self)
+	if not self.references then
+		self.references = {}
+	end
+end
+
+WwiseBankReference.add = function (self, bank_resource_name)
+	lazy_init(self)
+
+	self.references[bank_resource_name] = (self.references[bank_resource_name] or 0) + 1
+end
+
+WwiseBankReference.remove = function (self, bank_resource_name)
+	lazy_init(self)
+
+	local new_count = (self.references[bank_resource_name] or 0) - 1
+
+	if new_count <= 0 then
+		self.references[bank_resource_name] = nil
+	end
+end
+
+WwiseBankReference.count = function (self, bank_resource_name)
+	lazy_init(self)
+
+	return self.references[bank_resource_name] or 0
+end
+
+return WwiseBankReference
